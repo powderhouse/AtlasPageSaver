@@ -9,7 +9,7 @@ const services = [
 exports.handler = async (event, context) => {
   let result = null;
   let browser = null;
-  const url = event.queryStringParameters.url || event.url || 'http://www.example.com';
+  const url = (event.queryStringParameters || event).url || 'http://www.example.com';
 
   try {
     browser = await puppeteer.launch({
