@@ -24,7 +24,7 @@ exports.handler = async (event, context) => {
     await page.goto(url);
 
     for (var i=0; i<services.length; ++i) {
-      const service = require('../lib/' + services[i]);
+      const service = require('./lib/' + services[i]);
       if (service.match(url)) {
         await service.prepare(page);
       }

@@ -1,7 +1,7 @@
 {
-  "name": "atlas-saver",
+  "name": "atlas-page-saver",
   "version": "0.0.1",
-  "description": "Chrome Extension that saves web pages to Atlas.",
+  "description": "Lambda function that saves web pages for Atlas.",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
