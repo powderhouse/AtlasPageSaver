@@ -8,14 +8,14 @@ const services = [
 exports.handler = async (event, context) => {
   let result = null;
   let browser = null;
-  const url = event.queryStringParameters.url || event.url || 'http://www.example.com';
+  const url = (event.queryStringParameters || event).url || 'http://www.example.com';
 
   try {
     browser = await puppeteer.launch({headless: true});
 
     let page = await browser.newPage();
 
-    // page.on('console', consoleObj => console.log(consoleObj.text()));
+    page.on('console', consoleObj => console.log(consoleObj.text()));
 
     await page.goto(url);
 
@@ -50,13 +50,13 @@ exports.handler = async (event, context) => {
 
 exports.handler({
   queryStringParameters: {
-    url: "https://docs.google.com/document/d/14FCXnpa0bMxMIDyQYbtqn8V3NxYS3SgAQZ3vpLAnbNg/edit"
+    url: "https://docs.google.com/document/d/132GhTgWTgXgJO7EzvfTEOKS3QyqdBZSfngOeaqFfIuU/edit"
   }
 }, {
   succeed: function (result) {
     console.log(result.body);
   },
   fail: function(error) {
-    console.log("FAILED: " + error.message)
+    console.log("FAILED: " + error.stack)
   }
 });
