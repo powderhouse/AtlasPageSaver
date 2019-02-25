@@ -50,7 +50,7 @@ exports.handler = async (event, context) => {
 
 exports.handler({
   queryStringParameters: {
-    url: "https://docs.google.com/document/d/132GhTgWTgXgJO7EzvfTEOKS3QyqdBZSfngOeaqFfIuU/edit"
+    url: "https://docs.google.com/presentation/d/110GezjbmppRVMwHwub6OP48igQAW5jksqaczB3_OxBw/edit#slide=id.p"
   }
 }, {
   succeed: function (result) {
