@@ -14,7 +14,6 @@ exports.handler = async (event, context) => {
   let browser = null;
   const params = event.queryStringParameters || event;
   const url = params.url || 'http://www.example.com';
-  const username = params.username || "";
 
   try {
     browser = await puppeteer.launch({
@@ -43,9 +42,10 @@ exports.handler = async (event, context) => {
     const htmlDocument = mhtml2html.convert(mhtmlParsed);
 
     var filename = htmlDocument.title.replace(/\s/g, "-") + ".html";
-    if (username) {
-      filename = username + "/" + filename;
-    }
+    const location = "https://s3.amazonaws.com/" +
+                     bucket + "/" +
+                     Date.now() + "/" +
+                     filename;
 
     const request = await s3.putObject({
       Bucket: bucket,
@@ -55,22 +55,32 @@ exports.handler = async (event, context) => {
     });
 
     var statusCode = 302;
-    var body;
-    await request.on('error', function(response) {
-      statusCode = 500;
-      body = response.error;
-    }).
-    send();
+    var body = "";
+    await new Promise((resolve, reject) => {
+      request.on('complete', function(response) {
+          console.log("COMPLETE");
+          resolve();
+        }).on('success', function(response) {
+          console.log("SUCCESS");
+        }).on('error', function(response) {
+          console.log("ERROR");
+          statusCode = 500;
+          body = response;
+        }).
+        send();
+    });
 
     result = {
       "statusCode": statusCode,
       "headers": {
-        "Location": "https://s3.amazonaws.com/" + bucket + "/" + filename
+        "Location": location
       },
       "body": body
     };
 
   } catch (error) {
+    console.log("FAILED");
+    console.log(error);
     return context.fail(error);
   } finally {
     if (browser !== null) {
