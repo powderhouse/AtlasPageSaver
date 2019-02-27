@@ -41,11 +41,8 @@ exports.handler = async (event, context) => {
     const mhtmlParsed = mhtml2html.parse(data);
     const htmlDocument = mhtml2html.convert(mhtmlParsed);
 
-    var filename = htmlDocument.title.replace(/\s/g, "-") + ".html";
-    const location = "https://s3.amazonaws.com/" +
-                     bucket + "/" +
-                     Date.now() + "/" +
-                     filename;
+    var filename = Date.now() + "/" + htmlDocument.title.replace(/\s/g, "-") + ".html";
+    const location = "https://s3.amazonaws.com/" + bucket + "/" + filename;
 
     const request = await s3.putObject({
       Bucket: bucket,
